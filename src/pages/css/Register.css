@@ -1,0 +1,162 @@
+/* style.css */
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f4ff 0%, #f9f0ff 100%);
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .register-card {
+    width: 100%;
+    max-width: 28rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: cardEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  @keyframes cardEnter {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .register-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+  }
+  
+  .register-subtitle {
+    color: #718096;
+  }
+  
+  .input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .input-group:hover {
+    transform: translateX(5px);
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+  }
+  
+  .register-input {
+    width: 80%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 2px solid #869dbb;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .register-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  }
+  
+  .register-button {
+    width: 100%;
+    padding: 1rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .register-button:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+  }
+  
+  .register-button:active {
+    transform: translateY(0);
+  }
+  
+  .login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #718096;
+  }
+  
+  .login-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  
+  .login-link a:hover {
+    color: #5a67d8;
+    text-decoration: underline;
+  }
+  
+  /* Loading animation */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .loading-spinner {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.6s linear infinite;
+  }
+  
+  /* Phone number formatting */
+  input[type="tel"] {
+    letter-spacing: 0.05em;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 480px) {
+    .register-container {
+      padding: 1rem;
+    }
+    
+    .register-card {
+      border-radius: 1rem;
+    }
+    
+    .register-title {
+      font-size: 1.75rem;
+    }
+  }
