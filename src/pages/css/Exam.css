@@ -1,0 +1,128 @@
+/* exam.css */
+
+/* General styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Exam container */
+  .exam-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  /* Title animation */
+  .exam-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    opacity: 0;
+    animation: slideDown 0.8s ease-out forwards;
+  }
+  
+  /* Question block */
+  .question-block {
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+  }
+  
+  /* Question text */
+  .question-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #444;
+  }
+  
+  /* Option styling */
+  .option {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  
+  .option input {
+    margin-right: 10px;
+  }
+  
+  .option:hover {
+    background: #dbeafe;
+    transform: scale(1.05);
+  }
+  
+  /* Submit button */
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #3b82f6;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 20px;
+  }
+  
+  .submit-btn:hover {
+    background: #2563eb;
+  }
+  
+  .submit-btn:disabled {
+    background: #a5b4fc;
+    cursor: not-allowed;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

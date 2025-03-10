@@ -1,75 +1,87 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './css/Exam.css';
 
 const Exam = () => {
-  const [answers, setAnswers] = useState({})
-  const navigate = useNavigate()
+  const [answers, setAnswers] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
-  // Sample questions - replace with your actual questions
+  // Sample exam questions
   const questions = [
-    {
-      id: 1,
-      text: "What is 2 + 2?",
-      options: ["3", "4", "5", "6"],
-      correct: "4"
-    },
-    // Add more questions
-  ]
+    { id: 1, text: "What is 5 + 3?", options: ["6", "7", "8", "9"], correct: "8" },
+    { id: 2, text: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Venus", "Jupiter"], correct: "Mars" },
+    { id: 3, text: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Lisbon"], correct: "Paris" },
+    { id: 4, text: "Which gas do plants absorb from the atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: "Carbon Dioxide" },
+    { id: 5, text: "Who wrote 'Hamlet'?", options: ["Shakespeare", "Hemingway", "Tolkien", "Dickens"], correct: "Shakespeare" }
+  ];
+
+  const handleAnswerChange = (questionId, option) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: option }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       // Calculate score
       const score = questions.reduce((acc, question) => (
         answers[question.id] === question.correct ? acc + 1 : acc
-      ), 0)
+      ), 0);
 
-      await axios.post('https://backend-mqy5.onrender.com/api/users/submit-exam', 
-        { score },
-        { headers: { 'x-auth-token': localStorage.getItem('token') } }
-      )
-      
-      navigate('/score')
+      const response = await fetch('https://backend-production-e56f.up.railway.app/api/users/submit-exam', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ score })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit exam');
+      }
+
+      navigate('/score');
     } catch (err) {
-      console.error(err)
+      console.error(err);
+      alert(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6">Exam</h2>
-        <form onSubmit={handleSubmit}>
-          {questions.map((question) => (
-            <div key={question.id} className="mb-6">
-              <p className="font-medium mb-2">{question.text}</p>
-              <div className="space-y-2">
-                {question.options.map((option) => (
-                  <label key={option} className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      name={`question-${question.id}`}
-                      value={option}
-                      onChange={() => setAnswers(prev => ({...prev, [question.id]: option}))}
-                      className="form-radio"
-                    />
-                    <span>{option}</span>
-                  </label>
-                ))}
-              </div>
+    <div className="exam-container">
+      <h1 className="exam-title">Online Exam</h1>
+      <form onSubmit={handleSubmit} className="exam-form">
+        {questions.map((question) => (
+          <div key={question.id} className="question-block">
+            <p className="question-text">{question.text}</p>
+            <div className="options-container">
+              {question.options.map((option) => (
+                <label key={option} className="option">
+                  <input
+                    type="radio"
+                    name={`question-${question.id}`}
+                    value={option}
+                    checked={answers[question.id] === option}
+                    onChange={() => handleAnswerChange(question.id, option)}
+                    className="option-input"
+                  />
+                  <span className="option-text">{option}</span>
+                </label>
+              ))}
             </div>
-          ))}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
-          >
-            Submit Exam
-          </button>
-        </form>
-      </div>
+          </div>
+        ))}
+        <button type="submit" className="submit-btn" disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Submit Exam"}
+        </button>
+      </form>
     </div>
-  )
-}
+  );
+};
 
-export default Exam
+export default Exam;

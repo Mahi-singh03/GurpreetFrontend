@@ -2,57 +2,70 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { AiOutlineMail, AiOutlineLock } from 'react-icons/ai';
+import { AiOutlinePhone, AiOutlineLock } from 'react-icons/ai';
 import './css/Login.css'; 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+    setError('');
+
     try {
-      const res = await axios.post('https://backend-mqy5.onrender.com/api/users/login', {
-        email,
-        password
+      // Step 1: Authenticate the user
+      const res = await axios.post('https://backend-production-e56f.up.railway.app/api/users/login', {
+        phone,
+        password,
       });
 
+      // Step 2: Fetch user data (including exam status)
       const userRes = await axios.get('https://backend-mqy5.onrender.com/api/users/score', {
-        headers: { 'x-auth-token': res.data.token }
+        headers: { 'x-auth-token': res.data.token },
       });
 
+      // Step 3: Log the user in
       login(res.data.token, userRes.data);
-      navigate('/');
+
+      // Step 4: Redirect based on exam status
+      if (userRes.data.hasGivenExam) {
+        navigate('/score'); // Navigate to score page if exam is already taken
+      } else {
+        navigate('/'); // Navigate to dashboard if exam is not taken
+      }
     } catch (err) {
       console.error('Login error:', err);
-      alert(err.response?.data?.message || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="register-container"> 
-      <div className="register-card">
-        <div className="register-header">
-          <h2 className="register-title">Welcome Back</h2>
-          <p className="register-subtitle">Sign in to continue</p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h2 className="auth-title">Welcome Back</h2>
+          <p className="auth-subtitle">Sign in to continue</p>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        {error && <div className="auth-error">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
           <div className="input-group">
-            <AiOutlineMail className="input-icon" />
+            <AiOutlinePhone className="input-icon" />
             <input
-              type="email"
-              className="register-input"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="tel"
+              className="auth-input"
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               required
             />
           </div>
@@ -61,7 +74,7 @@ const Login = () => {
             <AiOutlineLock className="input-icon" />
             <input
               type="password"
-              className="register-input"
+              className="auth-input"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -70,9 +83,9 @@ const Login = () => {
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="register-button"
+          <button
+            type="submit"
+            className="auth-button"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -83,17 +96,18 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="login-link">
-          Don't have an account?{' '}
-          <Link to="/register" className="login-link">
-            Create account
-          </Link>
-        </p>
-
-        <div className="forgot-password">
-          <Link to="/forgot-password" className="login-link">
-            Forgot Password?
-          </Link>
+        <div className="auth-footer">
+          <p>
+            Don't have an account?{' '}
+            <Link to="/register" className="auth-link">
+              Create account
+            </Link>
+          </p>
+          <p>
+            <Link to="/forgot-password" className="auth-link">
+              Forgot Password?
+            </Link>
+          </p>
         </div>
       </div>
     </div>

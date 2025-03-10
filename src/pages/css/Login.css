@@ -1,25 +1,167 @@
-/* Add these to existing Register.css */
-.forgot-password {
-    text-align: center;
-    margin-top: 1rem;
+/* Base Styles */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f9f0ff 100%);
+  animation: fadeIn 0.5s ease-in;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: cardEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: #718096;
+}
+
+.auth-error {
+  color: #e53e3e;
+  background: #fed7d7;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+}
+
+.auth-input {
+  width: 80%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid #61666d;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.auth-button:active {
+  transform: translateY(0);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #718096;
+}
+
+.auth-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.auth-link:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cardEnter {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
   }
-  
-  .forgot-password a {
-    color: #667eea;
-    font-size: 0.9rem;
-    text-decoration: none;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .forgot-password a:hover {
-    text-decoration: underline;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1rem;
   }
-  
-  /* Optional: Add specific animations for login */
-  @keyframes slideIn {
-    from { transform: translateX(20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+
+  .auth-card {
+    border-radius: 1rem;
   }
-  
-  .login-container .register-card {
-    animation: slideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  .auth-title {
+    font-size: 1.75rem;
   }
+}

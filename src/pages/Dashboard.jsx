@@ -11,7 +11,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get('https://backend-mqy5.onrender.com/api/users/score', {
+        const res = await axios.get('backend-production-e56f.up.railway.app/api/users/score', {
           headers: {
             'x-auth-token': localStorage.getItem('token')
           }

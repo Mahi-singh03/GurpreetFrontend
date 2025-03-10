@@ -4,7 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
-import Exam from './pages/Exam'
+import Exam from './pages/Exam.jsx'
 import Score from './pages/Score'
 
 function App() {
@@ -17,12 +17,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
+          
+        
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/exam" element={<Exam />} />
             <Route path="/score" element={<Score />} />
-          </Route>
+         
         </Routes>
       </AuthProvider>
     </Router>

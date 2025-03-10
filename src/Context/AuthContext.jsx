@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       if (token) {
         try {
-          const res = await axios.get('https://backend-mqy5.onrender.com/api/users/score', {
+          const res = await axios.get('backend-production-e56f.up.railway.app/users/score', {
             headers: { 'x-auth-token': token }
           })
           setUser(res.data)

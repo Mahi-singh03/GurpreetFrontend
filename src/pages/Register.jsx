@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import { AiOutlineUser, AiOutlinePhone, AiOutlineMail, AiOutlineLock } from 'react-icons/ai';
 import './css/Register.css';
 
@@ -11,6 +10,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -22,8 +22,7 @@ const Register = () => {
   };
 
   const handlePhoneChange = (e) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    setPhone(formatted);
+    setPhone(formatPhoneNumber(e.target.value));
   };
 
   const handleSubmit = async (e) => {
@@ -31,22 +30,43 @@ const Register = () => {
     setIsSubmitting(true);
     
     try {
-      const res = await axios.post('https://backend-mqy5.onrender.com/api/users/register', {
-        name,
-        phone: phone.replace(/-/g, ''),
-        email,
-        password
+      const res = await fetch('https://backend-production-e56f.up.railway.app/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          phone: phone.replace(/-/g, ''), // Remove dashes before sending
+          email,
+          password
+        }),
       });
 
-      const userRes = await axios.get('https://backend-mqy5.onrender.com/api/users/score', {
-        headers: { 'x-auth-token': res.data.token }
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const data = await res.json();
+
+      // Fetch user details including score
+      const userRes = await fetch('https://backend-production-e56f.up.railway.app/api/users/score', {
+        headers: { 'x-auth-token': data.token }
       });
 
-      login(res.data.token, userRes.data);
-      navigate('/');
+      if (!userRes.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+
+      const userData = await userRes.json();
+
+      // Store token and user info in context
+      login(data.token, userData);
+      
+      // Show the popup modal
+      setIsRegistered(true);
     } catch (err) {
       console.error('Registration error:', err);
-      alert(err.response?.data?.message || 'Registration failed. Please try again.');
+      alert(err.message || 'Registration failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -116,21 +136,62 @@ const Register = () => {
             className="register-button"
             disabled={isSubmitting}
           >
-            {isSubmitting ? (
-              <div className="loading-spinner" />
-            ) : (
-              'Register Now'
-            )}
+            {isSubmitting ? <div className="loading-spinner" /> : 'Register Now'}
           </button>
         </form>
 
         <p className="login-link">
           Already have an account?{' '}
-          <Link to="/login" className="login-link">
-            Sign in here
-          </Link>
+          <Link to="/login" className="login-link">Sign in here</Link>
         </p>
       </div>
+
+      {/* POPUP MODAL */}
+      {isRegistered && (
+        <div className="modal-overlay" onClick={() => setIsRegistered(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Registration Complete 🎉</h2>
+            <p>You have successfully registered. Click below to start your exam.</p>
+            <button className="exam-button" onClick={() => navigate('/exam')}>
+              Go to Exam
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL STYLES */}
+      <style>{`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .modal-content {
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          text-align: center;
+          width: 300px;
+        }
+        .exam-button {
+          margin-top: 15px;
+          padding: 10px 15px;
+          border: none;
+          background: #007bff;
+          color: white;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        .exam-button:hover {
+          background: #0056b3;
+        }
+      `}</style>
     </div>
   );
 };
